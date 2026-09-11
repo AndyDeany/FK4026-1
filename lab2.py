@@ -4,7 +4,7 @@
 This laboration mainly concerns two thing:
 
 1. Being able to look at functions that are already defined, and to be
-able to use them effectively. Most of the time, you will no have to
+able to use them effectively. Most of the time, you will not have to
 write functions from scratch, but use already predefined function.
 Being able to understand how a function is called, what the input
 parameters are and what the expected output is, is important.
@@ -115,7 +115,7 @@ def plot_irradiance(time_epoch, solar_irradiance,
         String that specifies the label of the series, see documentation for
         matplotlib.pyplot.plot. Default is None.
 
-    .. notes::
+    ... notes::
         The following documetion is taken from matplotlib.pyplot.plot:
 
         **Format Strings**
@@ -294,16 +294,37 @@ def moving_average(input_list, window_size=0):
 # - a window size of 15 (average of the series that is 15 days before to 15
 #   days after the measurement, a "monthly average")
 # - a window size of 45 (a "quarterly-year average").
-def calculate_monthly_and_quarterly_averaged_solar_irradiance():
+def calculate_monthly_and_quarterly_solar_irradiance(solar_irradiance):
     """Calculate a moving average solar irradiance data month-wise and quarter-wise."""
-    _, _, solar_irradiance = get_irradiance_data()
     monthly_solar_irradiance = moving_average(solar_irradiance, 15)
     quarterly_solar_irradiance = moving_average(solar_irradiance, 45)
+    return solar_irradiance, monthly_solar_irradiance, quarterly_solar_irradiance
+
+
+def print_solar_irradiance():
+    """Print the daily, monthly, and quarterly solar irradiance data."""
+    daily, monthly, quarterly = calculate_monthly_and_quarterly_solar_irradiance(get_irradiance_data()[2])
     print(f"SERIES STATISTICS\n"
           f"Series      Mean irradiance\n"
-          f"Daily       {average(solar_irradiance):.8f}\n"
-          f"Monthly     XXXX.XXXXXXXX"
-          f"Quarterly   XXXX.XXXXXXXX")
+          f"Daily       {average(daily):.8f}\n"
+          f"Monthly     {average(monthly):.8f}\n"
+          f"Quarterly   {average(quarterly):.8f}\n")
+
+
+print_solar_irradiance()
+
+
+def plot_solar_irradiance():
+    """Plot the daily, monthly, and quarterly solar irradiance data."""
+    _, time_epoch, solar_irradiance = get_irradiance_data()
+    daily, monthly, quarterly = calculate_monthly_and_quarterly_solar_irradiance(solar_irradiance)
+    plot_irradiance(time_epoch, daily, label="Daily")
+    plot_irradiance(time_epoch, monthly, label="Monthly", marker_style="-r")
+    plot_irradiance(time_epoch, quarterly, label="Quarterly", marker_style="-g")
+    plt.show()
+
+
+plot_solar_irradiance()
 
 # 7.
 # plot the data using `plot_irradiance`. Plot both daily values and
