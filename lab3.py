@@ -99,15 +99,15 @@ def get_period_indices(start: str, end: str, data: dict) -> tuple[int | None, in
     return start_index, end_index
 
 
-def make_temp_hist(data):
+def make_temp_hist(data: dict) -> dict:
+    """Calculate the number of occurrences of each temperature value."""
     occurrences = {}
     for temp in data["temp"]:
         occurrences[temp] = occurrences.get(temp, 0) + 1
-
     return occurrences
 
 
-def plot_temp_histogram():
+def plot_temp_histogram() -> None:
     """Plot a histogram of the frequencies of different temperature values."""
     occurrences = make_temp_hist(read_weather_data())
     plt.plot(occurrences.keys(), occurrences.values(), "bo")
