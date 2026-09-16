@@ -36,8 +36,6 @@ def read_weather_data() -> dict:
 def plot_temp_vs_days() -> None:
     """Plot the temperature against the number of days since first measurement."""
     temps = read_weather_data()["temp"]
-    print(len(temps))
-    print(temps.count(None))
     label = "Data for average daily temperature in Stockholm"
     plt.plot(range(len(temps)), temps, label=label)
     plt.xlabel("Number of days from Jan 1st, 1756")
@@ -49,7 +47,8 @@ def plot_temp_vs_days() -> None:
 plot_temp_vs_days()
 
 
-def get_period_indices(start: str, end: str, data: dict) -> (int, int):
+def get_period_indices(start: str, end: str, data: dict) -> tuple[int | None, int | None]:
+    """Return the start and end indices encapsulating data belonging to the given date range."""
     start_year, start_month, start_day = map(int, start.split("-"))
     end_year, end_month, end_day = map(int, end.split("-"))
 
@@ -100,9 +99,22 @@ def get_period_indices(start: str, end: str, data: dict) -> (int, int):
     return start_index, end_index
 
 
-print(get_period_indices('1756-01-01', '1756-01-03', read_weather_data()))
-print(get_period_indices('1666-01-01', '1756-01-03', read_weather_data()))
-print(get_period_indices('1852-03-09', '1999-12-31', read_weather_data()))
-s, e = get_period_indices('1755-05-23', '2019-01-12', read_weather_data())
-print(s, e)
-print(read_weather_data()['temp'][e] == read_weather_data()['temp'][-1])
+def make_temp_hist(data):
+    occurrences = {}
+    for temp in data["temp"]:
+        occurrences[temp] = occurrences.get(temp, 0) + 1
+
+    return occurrences
+
+
+def plot_temp_histogram():
+    """Plot a histogram of the frequencies of different temperature values."""
+    occurrences = make_temp_hist(read_weather_data())
+    plt.plot(occurrences.keys(), occurrences.values(), "bo")
+    plt.xlabel("Temperature (0.1°C bins)")
+    plt.ylabel("Number of measurements")
+    plt.title("Temperature distribution/histogram in Stockholm")
+    plt.show()
+
+
+plot_temp_histogram()
