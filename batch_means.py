@@ -1,3 +1,6 @@
+"""Module for calculating the averages of valid data points in multiple batches of data."""
+
+
 class DataPoint:
     """Class for representing a single data point."""
 
@@ -13,7 +16,17 @@ class DataPoint:
 
 def get_file_name_from_user() -> str:
     """Ask the user for a file name and then return it."""
-    return input("Which data file? ")
+    while True:
+        file_name = input("Which data file? ")
+        try:    # Handle invalid file names by checking that a file with the given name exists
+            open(file_name).close()
+        except FileNotFoundError:
+            print(f"A file with name {file_name} could not be found. Please try again.")
+        else:
+            break
+
+    return file_name
+
 
 
 def read_data_from_sample_file(file_name: str) -> dict[int, DataPoint]:
@@ -22,24 +35,44 @@ def read_data_from_sample_file(file_name: str) -> dict[int, DataPoint]:
 
     with open(file_name, "r") as file:
         for line in file:
-            line_data = list(map(lambda d: d.strip(), line.split(",")))
-            batch_number = int(line_data[0])
-            data_point = DataPoint(float(line_data[1]), float(line_data[2]), float(line_data[3]))
+            try:    # Handle invalid lines in sample files by catching Exceptions
+                batch_number, data_point = read_line(line)
+            except Exception:
+                print(f"\n[Warning] The following line could not be parsed:\n    {line}")
+                continue
+
             data.setdefault(batch_number, []).append(data_point)
 
     return data
 
 
-def calculate_average(batch: list[DataPoint]) -> float:
-    """Calculate the average of the valid data points in given batch."""
+def read_line(line: str) -> tuple[int, DataPoint]:
+    """Read and return the data from the given line string."""
+    line_data = list(map(lambda d: d.strip(), line.split(",")))
+    batch_number = int(line_data[0])
+    data_point = DataPoint(float(line_data[1]), float(line_data[2]), float(line_data[3]))
+    return batch_number, data_point
+
+
+def calculate_average(batch: list[DataPoint]) -> float | None:
+    """Calculate the average of the valid data points in given batch.
+
+    Returns `None` if there are no valid data points.
+    """
     valid_values = [data_point.value for data_point in batch if data_point.is_valid]
+    if not valid_values:    # Avoid ZeroDivisionError when there are no valid data points
+        return None
     return sum(valid_values) / len(valid_values)
 
 
 def print_batch_averages(data) -> None:
     """Print averages of all batches in the given data."""
     for batch_number, batch in data.items():
-        print(f"{batch_number} \t {calculate_average(batch)}")
+        average = calculate_average(batch)
+        if average is None:     # Handle case where no data points in a batch are valid
+            print(f"{batch_number} \t No valid data points")
+        else:
+            print(f"{batch_number} \t {average}")
 
 
 def main():
