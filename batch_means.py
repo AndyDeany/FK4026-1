@@ -67,7 +67,7 @@ def calculate_average(batch: list[DataPoint]) -> float | None:
 
 def print_batch_averages(data) -> None:
     """Print averages of all batches in the given data."""
-    for batch_number, batch in data.items():
+    for batch_number, batch in sorted(data.items()):
         average = calculate_average(batch)
         if average is None:     # Handle case where no data points in a batch are valid
             print(f"{batch_number} \t No valid data points")
