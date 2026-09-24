@@ -11,6 +11,7 @@ class DataPoint:
 
     @property
     def is_valid(self) -> bool:
+        """Return whether this data point is valid."""
         return self.x**2 + self.y**2 <= 1
 
 
@@ -28,12 +29,11 @@ def get_file_name_from_user() -> str:
     return file_name
 
 
-
 def read_data_from_sample_file(file_name: str) -> dict[int, DataPoint]:
     """Read and return the data from the sample file with the given name."""
     data = {}
 
-    with open(file_name, "r") as file:
+    with open(file_name, "r", encoding="utf-8") as file:
         for line in file:
             try:    # Handle invalid lines in sample files by catching Exceptions
                 batch_number, data_point = read_line(line)
@@ -48,7 +48,7 @@ def read_data_from_sample_file(file_name: str) -> dict[int, DataPoint]:
 
 def read_line(line: str) -> tuple[int, DataPoint]:
     """Read and return the data from the given line string."""
-    line_data = list(map(lambda d: d.strip(), line.split(",")))
+    line_data = [d.strip() for d in  line.split(",")]
     batch_number = int(line_data[0])
     data_point = DataPoint(float(line_data[1]), float(line_data[2]), float(line_data[3]))
     return batch_number, data_point
