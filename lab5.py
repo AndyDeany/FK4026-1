@@ -2,6 +2,7 @@
 from matplotlib import pyplot as plt
 import numpy as np
 import scipy.stats
+import timeit
 
 
 plt.style.use("dark_background")
@@ -98,17 +99,45 @@ def read_and_plot(file_name: str, regression_parameter_function: function) -> No
     plot_regression(*read_file(file_name), alpha, beta)
 
 
+def benchmark_function(regression_parameter_function: function) -> None:
+    print(regression_parameter_function)
+    for file_name in ("small.txt", "medium.txt", "large.txt"):
+        benchmark_function_on_file(file_name, regression_parameter_function)
+
+
+def benchmark_function_on_file(file_name: str, regression_parameter_function: function) -> float:
+    """Benchmark the given regression parameter function on the given file. Returns average execution time in seconds."""
+    print(file_name, timeit.timeit(lambda: regression_parameter_function(file_name), number=1000))
+
+
 def main():
     """Run the main program."""
-    read_and_plot("small.txt", uppgift_a)
-    read_and_plot("medium.txt", uppgift_a)
-    read_and_plot("large.txt", uppgift_a)
-    read_and_plot("small.txt", uppgift_b)
-    read_and_plot("medium.txt", uppgift_b)
-    read_and_plot("large.txt", uppgift_b)
-    read_and_plot("small.txt", uppgift_c)
-    read_and_plot("medium.txt", uppgift_c)
-    read_and_plot("large.txt", uppgift_c)
+    # read_and_plot("small.txt", uppgift_a)
+    # read_and_plot("medium.txt", uppgift_a)
+    # read_and_plot("large.txt", uppgift_a)
+    # read_and_plot("small.txt", uppgift_b)
+    # read_and_plot("medium.txt", uppgift_b)
+    # read_and_plot("large.txt", uppgift_b)
+    # read_and_plot("small.txt", uppgift_c)
+    # read_and_plot("medium.txt", uppgift_c)
+    # read_and_plot("large.txt", uppgift_c)
+    benchmark_function(uppgift_a)
+    benchmark_function(uppgift_b)
+    benchmark_function(uppgift_c)
+    """
+    <function uppgift_a at 0x0000023CDB536C40>
+    small.txt 1.7332542000804096
+    medium.txt 15.545606799889356
+    large.txt 158.95802869996987
+    <function uppgift_b at 0x0000023CEE6D5900>
+    small.txt 0.9451810999307781
+    medium.txt 5.78290730016306
+    large.txt 57.73936649993993
+    <function uppgift_c at 0x0000023CEE6D7270>
+    small.txt 1.7974177000578493
+    medium.txt 6.684295400045812
+    large.txt 59.77635780000128
+    """
 
 
 if __name__ == "__main__":
