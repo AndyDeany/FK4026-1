@@ -1,29 +1,74 @@
 """Module containing solutions for labb 5."""
 from matplotlib import pyplot as plt
 import numpy as np
+import numpy.typing as npt
 import scipy.stats
 import timeit
+
+from helmholtz_fd import solve_helmholtz
 
 
 plt.style.use("dark_background")
 
 
-def uppgift_a(file_name: str) -> None:
+def uppgift_a(file_name: str) -> tuple[float, float]:
     """Code for Uppgift 1."""
     x, y = read_file(file_name)
     return calculate_regression_parameters_pure(x, y)
 
 
-def uppgift_b(file_name: str) -> None:
+def uppgift_b(file_name: str) -> tuple[float, float]:
     """Code for Uppgift 2."""
     data = np.loadtxt(file_name)
     return calculate_regression_parameters_numpy(data[:, 0], data[:, 1])
 
 
-def uppgift_c(file_name: str) -> None:
+def uppgift_c(file_name: str) -> tuple[float, float]:
     """Code for Uppgift 3."""
     data = np.loadtxt(file_name)
     return calculate_regression_parameters_scipy(data[:, 0], data[:, 1])
+
+
+def uppgift_4() -> None:
+    """Code for Uppgift 4.
+
+    A typical execution prints the following:
+        <function uppgift_a at 0x0000023CDB536C40>
+        small.txt 1.7332542000804096
+        medium.txt 15.545606799889356
+        large.txt 158.95802869996987
+        <function uppgift_b at 0x0000023CEE6D5900>
+        small.txt 0.9451810999307781
+        medium.txt 5.78290730016306
+        large.txt 57.73936649993993
+        <function uppgift_c at 0x0000023CEE6D7270>
+        small.txt 1.7974177000578493
+        medium.txt 6.684295400045812
+        large.txt 59.77635780000128
+
+    This shows that pure python is about 3x slower than NumPy/SciPy.
+    NumPy and SciPy are roughly equally fast, likely because SciPy
+    uses NumPy internally for calculations.
+    """
+    benchmark_function(uppgift_a)
+    benchmark_function(uppgift_b)
+    benchmark_function(uppgift_c)
+
+
+def uppgift_5() -> None:
+    """Code for Uppgift 5."""
+    for k in (1, 5, 10):
+        x, u, norm = solve_helmholtz(k)
+        print("Number of grid points:", len(x), "Solution norm:", norm)
+        print("Independently calculated norm:", calculate_norm(x, u))
+
+        plt.plot(x, np.real(u), label=f"k={k}")
+        plt.xlabel("x")
+        plt.ylabel("Re(u)")
+        plt.title("Helmholtz solutions for different values of k")
+
+    plt.legend()
+    plt.show()
 
 
 def read_file(file_name: str) -> tuple[list[float], list[float]]:
@@ -39,7 +84,7 @@ def read_file(file_name: str) -> tuple[list[float], list[float]]:
     return x, y
 
 
-def calculate_regression_parameters_pure(x: list[float], y: list[float]) -> tuple[int, int]:
+def calculate_regression_parameters_pure(x: list[float], y: list[float]) -> tuple[float, float]:
     """Take the given lists of x and y values and return the regression parameters.
 
     The parameters are calculated using pure Python (no external libraries).
@@ -56,7 +101,7 @@ def calculate_regression_parameters_pure(x: list[float], y: list[float]) -> tupl
     return alpha, beta
 
 
-def calculate_regression_parameters_numpy(x: np.ndarray[float], y: np.ndarray[float]) -> tuple[int, int]:
+def calculate_regression_parameters_numpy(x: npt.NDArray[np.float64], y: npt.NDArray[np.float64]) -> tuple[float, float]:
     """Take the given lists of x and y values and return the regression parameters.
 
     These parameters are calculated using numpy (as opposed to pure Python).
@@ -73,7 +118,7 @@ def calculate_regression_parameters_numpy(x: np.ndarray[float], y: np.ndarray[fl
     return alpha, beta
 
 
-def calculate_regression_parameters_scipy(x: list[float], y: list[float]) -> tuple[int, int]:
+def calculate_regression_parameters_scipy(x: npt.NDArray[np.float64], y: npt.NDArray[np.float64]) -> tuple[float, float]:
     """Take the given lists of x and y values and return the regression parameters.
 
     These parameters are calculated using scipy.
@@ -110,6 +155,12 @@ def benchmark_function_on_file(file_name: str, regression_parameter_function: fu
     print(file_name, timeit.timeit(lambda: regression_parameter_function(file_name), number=1000))
 
 
+def calculate_norm(x: npt.NDArray[np.float64], u: npt.NDArray[np.float64]) -> np.float64:
+    """Calculate the norm of the given array."""
+    h = x[1] - x[0]
+    return np.sqrt(h) * np.linalg.norm(u)
+
+
 def main():
     """Run the main program."""
     # read_and_plot("small.txt", uppgift_a)
@@ -121,23 +172,8 @@ def main():
     # read_and_plot("small.txt", uppgift_c)
     # read_and_plot("medium.txt", uppgift_c)
     # read_and_plot("large.txt", uppgift_c)
-    benchmark_function(uppgift_a)
-    benchmark_function(uppgift_b)
-    benchmark_function(uppgift_c)
-    """
-    <function uppgift_a at 0x0000023CDB536C40>
-    small.txt 1.7332542000804096
-    medium.txt 15.545606799889356
-    large.txt 158.95802869996987
-    <function uppgift_b at 0x0000023CEE6D5900>
-    small.txt 0.9451810999307781
-    medium.txt 5.78290730016306
-    large.txt 57.73936649993993
-    <function uppgift_c at 0x0000023CEE6D7270>
-    small.txt 1.7974177000578493
-    medium.txt 6.684295400045812
-    large.txt 59.77635780000128
-    """
+    # uppgift_4()
+    uppgift_5()
 
 
 if __name__ == "__main__":
