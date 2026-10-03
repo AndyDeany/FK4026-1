@@ -2,11 +2,13 @@
 
 Includes the code for uppgifter 1-3.
 """
-
 from matplotlib import pyplot as plt
 import numpy as np
 import numpy.typing as npt
 import scipy.stats
+
+
+plt.style.use("dark_background")
 
 
 def uppgift_a(file_name: str) -> tuple[float, float]:
