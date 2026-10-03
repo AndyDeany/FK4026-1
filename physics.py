@@ -38,7 +38,7 @@ def uppgift_6() -> None:
     ks = np.linspace(0, 8, 100)
     norms = []
     for k in ks:
-        x, u, norm = solve_helmholtz(k)
+        _x, _u, norm = solve_helmholtz(k)
         norms.append(norm)
 
     plt.xlabel("k")

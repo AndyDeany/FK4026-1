@@ -33,7 +33,7 @@ def read_file(data_file: str) -> tuple[list[float], list[float]]:
     """Read the data from the given file return lists of the x and y values contained therein."""
     x = []
     y = []
-    with open(data_file) as file:
+    with open(data_file, encoding="utf-8") as file:
         for line in file:
             x_value, y_value = line.split()
             x.append(float(x_value))
@@ -59,7 +59,8 @@ def calculate_regression_parameters_pure(x: list[float], y: list[float]) -> tupl
     return alpha, beta
 
 
-def calculate_regression_parameters_numpy(x: npt.NDArray[np.float64], y: npt.NDArray[np.float64]) -> tuple[float, float]:
+def calculate_regression_parameters_numpy(x: npt.NDArray[np.float64],
+                                          y: npt.NDArray[np.float64]) -> tuple[float, float]:
     """Take the given lists of x and y values and return the linear regression parameters (α, β).
 
     These parameters are calculated using NumPy.
@@ -76,7 +77,8 @@ def calculate_regression_parameters_numpy(x: npt.NDArray[np.float64], y: npt.NDA
     return alpha, beta
 
 
-def calculate_regression_parameters_scipy(x: npt.NDArray[np.float64], y: npt.NDArray[np.float64]) -> tuple[float, float]:
+def calculate_regression_parameters_scipy(x: npt.NDArray[np.float64],
+                                          y: npt.NDArray[np.float64]) -> tuple[float, float]:
     """Take the given lists of x and y values and return the linear regression parameters (α, β).
 
     These parameters are calculated using scipy.
