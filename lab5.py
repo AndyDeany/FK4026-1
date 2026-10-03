@@ -11,6 +11,9 @@ from helmholtz_fd import solve_helmholtz
 plt.style.use("dark_background")
 
 
+DATA_FILES = ("small.txt", "medium.txt", "large.txt")
+
+
 def uppgift_a(file_name: str) -> tuple[float, float]:
     """Code for Uppgift 1."""
     x, y = read_file(file_name)
@@ -69,6 +72,21 @@ def uppgift_5() -> None:
 
     plt.legend()
     plt.show()
+
+
+def uppgift_6() -> None:
+    """Code for Uppgift 6."""
+    ks = np.linspace(0, 8, 100)
+    norms = []
+    for k in ks:
+        x, u, norm = solve_helmholtz(k)
+        norms.append(norm)
+
+    plt.xlabel("k")
+    plt.ylabel("norm")
+    plt.title("Plot of scaled L2 norm as a function of wavenumber k")
+    plot_regression(ks, norms, *calculate_regression_parameters_scipy(ks, norms))
+
 
 
 def read_file(file_name: str) -> tuple[list[float], list[float]]:
@@ -146,7 +164,7 @@ def read_and_plot(file_name: str, regression_parameter_function: function) -> No
 
 def benchmark_function(regression_parameter_function: function) -> None:
     print(regression_parameter_function)
-    for file_name in ("small.txt", "medium.txt", "large.txt"):
+    for file_name in DATA_FILES:
         benchmark_function_on_file(file_name, regression_parameter_function)
 
 
@@ -163,17 +181,12 @@ def calculate_norm(x: npt.NDArray[np.float64], u: npt.NDArray[np.float64]) -> np
 
 def main():
     """Run the main program."""
-    # read_and_plot("small.txt", uppgift_a)
-    # read_and_plot("medium.txt", uppgift_a)
-    # read_and_plot("large.txt", uppgift_a)
-    # read_and_plot("small.txt", uppgift_b)
-    # read_and_plot("medium.txt", uppgift_b)
-    # read_and_plot("large.txt", uppgift_b)
-    # read_and_plot("small.txt", uppgift_c)
-    # read_and_plot("medium.txt", uppgift_c)
-    # read_and_plot("large.txt", uppgift_c)
+    # for uppgift in (uppgift_a, uppgift_b, uppgift_c):
+    #     for file_name in DATA_FILES:
+    #         read_and_plot(file_name, uppgift)
     # uppgift_4()
-    uppgift_5()
+    # uppgift_5()
+    uppgift_6()
 
 
 if __name__ == "__main__":
