@@ -26,7 +26,7 @@ def uppgift_c(file_name: str) -> None:
     return calculate_regression_parameters_scipy(data[:, 0], data[:, 1])
 
 
-def read_file(file_name: str) -> Tuple[list[float], list[float]]:
+def read_file(file_name: str) -> tuple[list[float], list[float]]:
     """Read the data file with the given name and return lists of the included x and y values."""
     x = []
     y = []
@@ -39,7 +39,7 @@ def read_file(file_name: str) -> Tuple[list[float], list[float]]:
     return x, y
 
 
-def calculate_regression_parameters_pure(x: list[float], y: list[float]) -> tuple:
+def calculate_regression_parameters_pure(x: list[float], y: list[float]) -> tuple[int, int]:
     """Take the given lists of x and y values and return the regression parameters.
 
     The parameters are calculated using pure Python (no external libraries).
@@ -56,7 +56,7 @@ def calculate_regression_parameters_pure(x: list[float], y: list[float]) -> tupl
     return alpha, beta
 
 
-def calculate_regression_parameters_numpy(x: np.ndarray[float], y: np.ndarray[float]) -> tuple:
+def calculate_regression_parameters_numpy(x: np.ndarray[float], y: np.ndarray[float]) -> tuple[int, int]:
     """Take the given lists of x and y values and return the regression parameters.
 
     These parameters are calculated using numpy (as opposed to pure Python).
@@ -73,7 +73,7 @@ def calculate_regression_parameters_numpy(x: np.ndarray[float], y: np.ndarray[fl
     return alpha, beta
 
 
-def calculate_regression_parameters_scipy(x: list[float], y: list[float]) -> tuple:
+def calculate_regression_parameters_scipy(x: list[float], y: list[float]) -> tuple[int, int]:
     """Take the given lists of x and y values and return the regression parameters.
 
     These parameters are calculated using scipy.
@@ -82,14 +82,14 @@ def calculate_regression_parameters_scipy(x: list[float], y: list[float]) -> tup
     return regression.intercept, regression.slope
 
 
-def plot_regression(x: ndarray[float], y: ndarray[float], alpha: float, beta: float) -> None:
+def plot_regression(x: np.ndarray[float], y: np.ndarray[float], alpha: float, beta: float) -> None:
     """Plot the given points together with their linear regression line."""
     # plt.scatter(x, y, color="pink", marker="$♥$", s=50)
     # plt.axline((0, alpha), slope=beta, color="#ffef5c")
-    plt.scatter(x, y, color="#34d6eb", marker="$♪$", s=50)
-    plt.axline((0, alpha), slope=beta, color="#eba134")
-    # plt.scatter(x, y, color="yellow", marker="$☼$", s=50)
-    # plt.axline((0, alpha), slope=beta, color="green")
+    # plt.scatter(x, y, color="#34d6eb", marker="$♪$", s=50)
+    # plt.axline((0, alpha), slope=beta, color="#eba134")
+    plt.scatter(x, y, color="yellow", marker="$☼$", s=50)
+    plt.axline((0, alpha), slope=beta, color="green")
     plt.show()
 
 
@@ -105,7 +105,7 @@ def benchmark_function(regression_parameter_function: function) -> None:
         benchmark_function_on_file(file_name, regression_parameter_function)
 
 
-def benchmark_function_on_file(file_name: str, regression_parameter_function: function) -> float:
+def benchmark_function_on_file(file_name: str, regression_parameter_function: function) -> None:
     """Benchmark the given regression parameter function on the given file. Returns average execution time in seconds."""
     print(file_name, timeit.timeit(lambda: regression_parameter_function(file_name), number=1000))
 
