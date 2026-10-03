@@ -39,11 +39,19 @@ def uppgift_4() -> None:
 
 
 def _benchmark_function(regression_parameter_function) -> None:
+    """Benchmark the given function on the available test data files.
+
+    regression_parameter_function:
+        A function with the signature regression_parameter_function(file_name) -> alpha, beta.
+    """
     print(regression_parameter_function)
     for file_name in DATA_FILES:
-        _benchmark_function_on_file(file_name, regression_parameter_function)
+        print(file_name, _benchmark_function_on_file(file_name, regression_parameter_function))
 
 
-def _benchmark_function_on_file(file_name: str, regression_parameter_function) -> None:
-    """Benchmark the given regression parameter function on the given file. Returns average execution time in seconds."""
-    print(file_name, timeit.timeit(lambda: regression_parameter_function(file_name), number=1000))
+def _benchmark_function_on_file(file_name: str, regression_parameter_function) -> float:
+    """Benchmark the given linear regression parameter function on the given data file.
+
+    Returns the execution time it takes for 1000 calls to complete in seconds.
+    """
+    return timeit.timeit(lambda: regression_parameter_function(file_name), number=1000)

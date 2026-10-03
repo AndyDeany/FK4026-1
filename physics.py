@@ -14,7 +14,11 @@ plt.style.use("dark_background")
 
 
 def uppgift_5() -> None:
-    """Code for Uppgift 5."""
+    """Code for Uppgift 5.
+
+    Iterates through different wave number values and plots the real part of
+    the Helmholtz solution against the corresponding x value.
+    """
     for k in (1, 5, 10):
         x, u, norm = solve_helmholtz(k)
         print("Number of grid points:", len(x), "Solution norm:", norm)
@@ -44,6 +48,9 @@ def uppgift_6() -> None:
 
 
 def calculate_norm(x: npt.NDArray[np.float64], u: npt.NDArray[np.float64]) -> np.float64:
-    """Calculate the norm of the given array."""
+    """Calculate the scaled L2 norm of the given helmholtz solution data.
+
+    The parameters x, u should be numpy arrays from the helmholtz_fd.solve_helmholtz function.
+    """
     h = x[1] - x[0]
     return np.sqrt(h) * np.linalg.norm(u)
