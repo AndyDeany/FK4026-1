@@ -3,17 +3,14 @@ from matplotlib import pyplot as plt
 import numpy as np
 import numpy.typing as npt
 import scipy.stats
-import timeit
 
+from benchmarking import _benchmark_function, DATA_FILES
 from helmholtz_fd import solve_helmholtz
 from regression import (uppgift_a, uppgift_b, uppgift_c,
                         read_file, calculate_regression_parameters_scipy, plot_regression)
 
 
 plt.style.use("dark_background")
-
-
-DATA_FILES = ("small.txt", "medium.txt", "large.txt")
 
 
 def uppgift_4() -> None:
@@ -37,9 +34,9 @@ def uppgift_4() -> None:
     NumPy and SciPy are roughly equally fast, likely because SciPy
     uses NumPy internally for calculations.
     """
-    benchmark_function(uppgift_a)
-    benchmark_function(uppgift_b)
-    benchmark_function(uppgift_c)
+    _benchmark_function(uppgift_a)
+    _benchmark_function(uppgift_b)
+    _benchmark_function(uppgift_c)
 
 
 def uppgift_5() -> None:
@@ -72,21 +69,10 @@ def uppgift_6() -> None:
     plot_regression(ks, norms, *calculate_regression_parameters_scipy(ks, norms))
 
 
-def read_and_plot(file_name: str, regression_parameter_function: function) -> None:
+def read_and_plot(file_name: str, regression_parameter_function) -> None:
     """Read the given file and plot the result given data with its regression line."""
     alpha, beta = regression_parameter_function(file_name)
     plot_regression(*read_file(file_name), alpha, beta)
-
-
-def benchmark_function(regression_parameter_function: function) -> None:
-    print(regression_parameter_function)
-    for file_name in DATA_FILES:
-        benchmark_function_on_file(file_name, regression_parameter_function)
-
-
-def benchmark_function_on_file(file_name: str, regression_parameter_function: function) -> None:
-    """Benchmark the given regression parameter function on the given file. Returns average execution time in seconds."""
-    print(file_name, timeit.timeit(lambda: regression_parameter_function(file_name), number=1000))
 
 
 def calculate_norm(x: npt.NDArray[np.float64], u: npt.NDArray[np.float64]) -> np.float64:
@@ -97,11 +83,11 @@ def calculate_norm(x: npt.NDArray[np.float64], u: npt.NDArray[np.float64]) -> np
 
 def main():
     """Run the main program."""
-    # for uppgift in (uppgift_a, uppgift_b, uppgift_c):
-    #     for file_name in DATA_FILES:
-    #         read_and_plot(file_name, uppgift)
-    # uppgift_4()
-    # uppgift_5()
+    for uppgift in (uppgift_a, uppgift_b, uppgift_c):
+        for file_name in DATA_FILES:
+            read_and_plot(file_name, uppgift)
+    uppgift_4()
+    uppgift_5()
     uppgift_6()
 
 
