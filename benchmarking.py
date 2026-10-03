@@ -1,3 +1,7 @@
+"""Module containing code for benchmarking linear regression functions.
+
+Includes the code for uppgift 4.
+"""
 import timeit
 
 

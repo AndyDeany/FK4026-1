@@ -1,3 +1,8 @@
+"""Module containing code for calculating and plotting linear regressions on datasets.
+
+Includes the code for uppgifter 1-3.
+"""
+
 from matplotlib import pyplot as plt
 import numpy as np
 import numpy.typing as npt
