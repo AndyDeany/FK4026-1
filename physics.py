@@ -41,10 +41,8 @@ def uppgift_6() -> None:
         _x, _u, norm = solve_helmholtz(k)
         norms.append(norm)
 
-    plt.xlabel("k")
-    plt.ylabel("norm")
     plt.title("Plot of scaled L2 norm as a function of wavenumber k")
-    plot_regression(ks, norms, *calculate_regression_parameters_scipy(ks, norms))
+    plot_regression(ks, norms, *calculate_regression_parameters_scipy(ks, norms), xlabel="k", ylabel="norm")
 
 
 def calculate_norm(x: npt.NDArray[np.float64], u: npt.NDArray[np.float64]) -> np.float64:

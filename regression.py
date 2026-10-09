@@ -87,16 +87,21 @@ def calculate_regression_parameters_scipy(x: npt.NDArray[np.float64],
     return regression.intercept, regression.slope
 
 
-def plot_regression(x: np.ndarray[float], y: np.ndarray[float], alpha: float, beta: float) -> None:
+def plot_regression(x: np.ndarray[float], y: np.ndarray[float], alpha: float, beta: float,
+                    xlabel: str="x", ylabel: str="y") -> None:
     """Plot the given points together with their linear regression line.
 
     x, y: The values to plot on the graph.
     alpha, beta: The linear regression parameters to use for plotting the line of best fit.
     """
+    label = f"Regression: {ylabel} = {alpha:.2f} + {beta:.2f}({xlabel})"
     # plt.scatter(x, y, color="pink", marker="$♥$", s=50)
-    # plt.axline((0, alpha), slope=beta, color="#ffef5c")
+    # plt.axline((0, alpha), slope=beta, color="#ffef5c", label=label)
     # plt.scatter(x, y, color="#34d6eb", marker="$♪$", s=50)
-    # plt.axline((0, alpha), slope=beta, color="#eba134")
+    # plt.axline((0, alpha), slope=beta, color="#eba134", label=label)
     plt.scatter(x, y, color="yellow", marker="$☼$", s=50)
-    plt.axline((0, alpha), slope=beta, color="green")
+    plt.axline((0, alpha), slope=beta, color="green", label=label)
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+    plt.legend()
     plt.show()
